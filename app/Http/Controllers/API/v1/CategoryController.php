@@ -10,8 +10,11 @@ class CategoryController extends Controller
 {
     public function index(Request $request){
         $perPage = $request->input('per_page', 5);
+        $sortBy = $request->input('sortBy', 'updated_at');
+        $sortDirection = $request->input('sortDirection', 'desc');
 
-        $categories = Category::paginate($perPage);
+        $categories = Category::OrderBy($sortBy, $sortDirection)
+            ->paginate($perPage);
 
         return response()->json($categories);
     }

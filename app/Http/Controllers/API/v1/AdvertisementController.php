@@ -11,8 +11,12 @@ class AdvertisementController extends Controller
     public function index(Request $request)
     {
         $perPage = $request->input('perPage', 5);
+        $sortBy = $request->input('sortBy', 'updated_at');
+        $sortDirection = $request->input('sortDirection', 'desc');
 
-        $advertisements = Advertisement::with(['post', 'contactInfo'])->paginate($perPage);
+        $advertisements = Advertisement::with(['post', 'contactInfo'])
+            ->OrderBy($sortBy, $sortDirection)
+            ->paginate($perPage);
 
         return response()->json($advertisements);
     }
