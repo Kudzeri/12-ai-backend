@@ -2,8 +2,10 @@
 
 namespace Database\Seeders;
 
+use App\Models\Advertisement;
+use App\Models\ContactInfo;
+use App\Models\Post;
 use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -13,11 +15,22 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $users = User::factory()->count(10)->create();
 
-        User::factory()->create([
-            'name' => 'Test User',
-            'email' => 'test@example.com',
-        ]);
+        $advertisements = Advertisement::factory()
+            ->count(10)
+            ->create([
+                'user_id' => $users->random()->id,
+            ]);
+
+        foreach ($advertisements as $advertisement) {
+            Post::factory()->create([
+                'advertisement_id' => $advertisement->id,
+            ]);
+
+            ContactInfo::factory()->create([
+                'advertisement_id' => $advertisement->id,
+            ]);
+        }
     }
 }
