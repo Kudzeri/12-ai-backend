@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Advertisement;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class AdvertisementController extends Controller
 {
@@ -20,11 +21,12 @@ class AdvertisementController extends Controller
 
         if($advertisements->isEmpty()){
             return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
                 'message' => 'No advertisements found',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
 
-        return response()->json($advertisements,200);
+        return response()->json($advertisements,Response::HTTP_OK);
     }
 
 }

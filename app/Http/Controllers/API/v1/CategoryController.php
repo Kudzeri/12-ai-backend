@@ -5,6 +5,7 @@ namespace App\Http\Controllers\API\v1;
 use App\Http\Controllers\Controller;
 use App\Models\Category;
 use Illuminate\Http\Request;
+use Illuminate\Http\Response;
 
 class CategoryController extends Controller
 {
@@ -18,9 +19,10 @@ class CategoryController extends Controller
 
         if($categories->isEmpty()){
             return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
                 'message' => 'No categories found',
-            ], 404);
+            ], Response::HTTP_NOT_FOUND);
         }
-        return response()->json($categories,200);
+        return response()->json($categories,Response::HTTP_OK);
     }
 }
