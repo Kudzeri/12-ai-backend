@@ -16,6 +16,11 @@ class CategoryController extends Controller
         $categories = Category::OrderBy($sortBy, $sortDirection)
             ->paginate($perPage);
 
-        return response()->json($categories);
+        if($categories->isEmpty()){
+            return response()->json([
+                'message' => 'No categories found',
+            ], 404);
+        }
+        return response()->json($categories,200);
     }
 }

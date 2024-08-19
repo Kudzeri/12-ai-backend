@@ -18,7 +18,13 @@ class AdvertisementController extends Controller
             ->OrderBy($sortBy, $sortDirection)
             ->paginate($perPage);
 
-        return response()->json($advertisements);
+        if($advertisements->isEmpty()){
+            return response()->json([
+                'message' => 'No advertisements found',
+            ], 404);
+        }
+
+        return response()->json($advertisements,200);
     }
 
 }
