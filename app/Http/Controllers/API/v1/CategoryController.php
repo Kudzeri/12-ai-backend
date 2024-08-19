@@ -10,7 +10,7 @@ use Illuminate\Http\Response;
 class CategoryController extends Controller
 {
     public function index(Request $request){
-        $perPage = $request->input('per_page', 5);
+        $perPage = $request->input('perPage', 5);
         $sortBy = $request->input('sortBy', 'updated_at');
         $sortDirection = $request->input('sortDirection', 'desc');
 
