@@ -10,5 +10,8 @@ Route::get('/user', function (Request $request) {
 })->middleware('auth:sanctum');
 
 
-Route::get('/categories', [CategoryController::class, 'index']);
-Route::get('/advertisements', [AdvertisementController::class, 'index']);
+Route::prefix('v1')->group(function () {
+    Route::get('/categories', [CategoryController::class, 'index']);
+    Route::get('/advertisements', [AdvertisementController::class, 'index']);
+    Route::post('/categories', [CategoryController::class, 'store']);
+});

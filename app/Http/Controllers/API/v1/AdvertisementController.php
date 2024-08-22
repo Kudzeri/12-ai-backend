@@ -26,7 +26,10 @@ class AdvertisementController extends Controller
             ], Response::HTTP_NOT_FOUND);
         }
 
-        return response()->json($advertisements,Response::HTTP_OK);
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'data' => $advertisements,
+        ],Response::HTTP_OK);
     }
 
 }
