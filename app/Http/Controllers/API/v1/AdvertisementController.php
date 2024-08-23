@@ -135,6 +135,21 @@ class AdvertisementController extends Controller
         }
     }
 
+    public function show($id){
+        $advertisement = Advertisement::with(['post', 'contactInfo'])->find($id);
+
+        if(is_null($advertisement)){
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'No advertisement found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'data' => $advertisement,
+        ], Response::HTTP_OK);
+    }
 
 
 }

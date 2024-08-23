@@ -17,4 +17,5 @@ Route::prefix('v1')->group(function () {
 
     Route::get('/advertisements', [AdvertisementController::class, 'index']);
     Route::post('/advertisements', [AdvertisementController::class, 'store']);
+    Route::get('/advertisements/{id}', [AdvertisementController::class, 'show']);
 });
