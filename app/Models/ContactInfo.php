@@ -11,8 +11,13 @@ class ContactInfo extends Model
     use HasFactory;
 
     protected $fillable = [
-        'advertisement_id', 'phone_number', 'backup_phone', 'email', 'website_link',
-        'country', 'location', 'map_location'
+        'advertisement_id',
+        'phone_number',
+        'backup_phone',
+        'email',
+        'website_link',
+        'country',
+        'location',
     ];
 
     public function advertisement(): BelongsTo

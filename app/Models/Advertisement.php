@@ -11,8 +11,17 @@ class Advertisement extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'category_id', 'subcategory_id', 'brand', 'model', 'conditions',
-        'authenticity', 'price', 'negotiable', 'tags'
+        'user_id',
+        'name',
+        'category_id',
+        'subcategory_id',
+        'brand',
+        'model',
+        'conditions',
+        'authenticity',
+        'price',
+        'negotiable',
+        'tags',
     ];
 
     protected $casts = [

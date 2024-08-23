@@ -10,7 +10,12 @@ class Post extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['advertisement_id', 'description', 'feature', 'photos'];
+    protected $fillable = [
+        'advertisement_id',
+        'description',
+        'feature',
+        'images'
+    ];
 
     protected $casts = [
         'photos' => 'array',

@@ -47,7 +47,7 @@ class CategoryController extends Controller
         }
 
         try {
-            Category::create([
+            $category = Category::create([
                 'name' => $request->name,
                 'slug' => $request->slug,
                 'parent_id' => $request->parent_id
@@ -55,7 +55,8 @@ class CategoryController extends Controller
 
             return response()->json([
                 'status' => Response::HTTP_OK,
-                'message' => 'Category created successfully'
+                'message' => 'Category created successfully',
+                'category' => $category
             ], Response::HTTP_OK);
         } catch (\Exception $e) {
             Log::error('Error creating category: '.$e->getMessage());

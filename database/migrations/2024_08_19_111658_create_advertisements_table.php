@@ -19,11 +19,11 @@ return new class extends Migration
             $table->foreignId('subcategory_id')->constrained('categories')->nullOnDelete();
             $table->string('brand');
             $table->string('model');
-            $table->string('conditions');
+            $table->string('conditions')->nullable();
             $table->string('authenticity');
             $table->decimal('price', 10, 2);
             $table->boolean('negotiable');
-            $table->json('tags');
+            $table->json('tags')->nullable();
             $table->timestamps();
         });
     }
