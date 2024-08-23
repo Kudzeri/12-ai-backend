@@ -65,6 +65,21 @@ class CategoryController extends Controller
                 'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
                 'message' => 'Failed to create category'], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
 
+    public function show($id){
+        $category = Category::with('children')->where('id', $id)->first();
+
+        if(is_null($category)){
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'No category found',
+            ]);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'data' => $category
+        ]);
     }
 }
