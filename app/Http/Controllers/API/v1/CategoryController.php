@@ -74,12 +74,12 @@ class CategoryController extends Controller
             return response()->json([
                 'status' => Response::HTTP_NOT_FOUND,
                 'message' => 'No category found',
-            ]);
+            ]), Response::HTTP_NOT_FOUND;
         }
 
         return response()->json([
             'status' => Response::HTTP_OK,
             'data' => $category
-        ]);
+        ]),Response::HTTP_OK;
     }
 }
