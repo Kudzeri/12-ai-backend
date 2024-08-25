@@ -244,7 +244,34 @@ class AdvertisementController extends Controller
                'message' => 'Failed to update advertisement'
            ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
+    }
 
+    public function destroy($id){
+        $advertisement = Advertisement::find($id);
+
+        if(is_null($advertisement)){
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'No advertisement found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        try {
+            Log::info('Deleting advertisement:', ['advertisement' => $advertisement]);
+            $advertisement->delete();
+
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'Advertisement deleted successfully',
+            ], Response::HTTP_OK);
+        } catch (\Exception $e){
+            Log::error('Error deleting advertisement: ' . $e->getMessage());
+
+            return response()->json([
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Failed to delete advertisement'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
     }
 
 }

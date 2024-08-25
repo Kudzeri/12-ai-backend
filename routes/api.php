@@ -21,4 +21,5 @@ Route::prefix('v1')->group(function () {
     Route::post('/advertisements', [AdvertisementController::class, 'store']);
     Route::get('/advertisements/{id}', [AdvertisementController::class, 'show']);
     Route::put('/advertisements/{id}', [AdvertisementController::class, 'update']);
+    Route::delete('/advertisements/{id}', [AdvertisementController::class, 'destroy']);
 });
