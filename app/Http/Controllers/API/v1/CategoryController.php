@@ -129,4 +129,31 @@ class CategoryController extends Controller
             ], Response::HTTP_INTERNAL_SERVER_ERROR);
         }
     }
+
+    public function destroy($id){
+        $category = Category::find($id);
+
+        if(is_null($category)){
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'No category found',
+            ], Response::HTTP_NOT_FOUND);
+        }
+
+        try {
+            Log::info('Deleting category: {name}:{id}',$category->name, $id);
+            $category->delete();
+
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'Category deleted successfully',
+            ], Response::HTTP_OK);
+        } catch (\Exception $e){
+            Log::error('Error deleting category: '.$e->getMessage());
+            return response()->json([
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Failed to delete category'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }
