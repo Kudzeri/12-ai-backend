@@ -82,4 +82,51 @@ class CategoryController extends Controller
             'data' => $category
         ],Response::HTTP_OK);
     }
+
+    public function update(Request $request, $id){
+        Log::info('Request data:', $request->all());
+
+        $category = Category::find($id);
+        if(is_null($category)){
+            return response()->json([
+                'status' => Response::HTTP_NOT_FOUND,
+                'message' => 'No category found',
+            ],Response::HTTP_NOT_FOUND);
+        }
+
+        $validator = Validator::make($request->all(), [
+            'name' => 'required|string|max:255',
+            'slug' => 'required|string|max:255',
+            'parent_id' => 'nullable|integer|exists:categories,id'
+        ]);
+        if($validator->fails()){
+            return response()->json([
+                    'status' => Response::HTTP_BAD_REQUEST,
+                    'message' => $validator->errors()
+                ]
+                , Response::HTTP_UNPROCESSABLE_ENTITY);
+        }
+
+        try {
+            Log::info('Updating category: '.$category->name);
+            $category->update([
+                    'name' => $request->name,
+                    'slug' => $request->slug,
+                    'parent_id' => $request->parent_id,
+                ]);
+            Log::info('Updated category: '.$category->name);
+
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'Category updated successfully',
+                'category' => $category
+            ], Response::HTTP_OK);
+        } catch (\Exception $e){
+            Log::error('Error updating category: '.$e->getMessage());
+            return response()->json([
+                'status' => Response::HTTP_INTERNAL_SERVER_ERROR,
+                'message' => 'Failed to update category'
+            ], Response::HTTP_INTERNAL_SERVER_ERROR);
+        }
+    }
 }

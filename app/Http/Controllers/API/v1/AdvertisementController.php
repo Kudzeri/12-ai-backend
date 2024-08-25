@@ -151,5 +151,10 @@ class AdvertisementController extends Controller
         ], Response::HTTP_OK);
     }
 
+    public function update(Request $request, $id){
+        Log::info('Request data:', $request->all());
+
+        
+    }
 
 }
