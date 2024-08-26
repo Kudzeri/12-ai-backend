@@ -19,10 +19,16 @@ class AdvertisementController extends Controller
         $perPage = $request->input('perPage', 5);
         $sortBy = $request->input('sortBy', 'updated_at');
         $sortDirection = $request->input('sortDirection', 'desc');
+        $keyword = $request->input('name', '');
 
-        $advertisements = Advertisement::with(['post', 'contactInfo'])
-            ->OrderBy($sortBy, $sortDirection)
-            ->paginate($perPage);
+        $query = Advertisement::with(['post', 'contactInfo'])
+            ->orderBy($sortBy, $sortDirection);
+
+        if (!empty($keyword)) {
+            $query->where('name', 'like', "%{$keyword}%");
+        }
+
+        $advertisements = $query->paginate($perPage);
 
         if($advertisements->isEmpty()){
             return response()->json([
@@ -34,7 +40,7 @@ class AdvertisementController extends Controller
         return response()->json([
             'status' => Response::HTTP_OK,
             'data' => $advertisements,
-        ],Response::HTTP_OK);
+        ], Response::HTTP_OK);
     }
 
     public function store(Request $request)
