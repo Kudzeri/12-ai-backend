@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\API\v1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Resources\CategoryCollection;
 use App\Models\Category;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -25,10 +26,7 @@ class CategoryController extends Controller
                 'message' => 'No categories found',
             ], Response::HTTP_NOT_FOUND);
         }
-        return response()->json([
-            'status' => Response::HTTP_OK,
-            'data' => $categories,
-        ],Response::HTTP_OK);
+        return new CategoryCollection($categories);
     }
 
     public function store(Request $request){
@@ -67,8 +65,8 @@ class CategoryController extends Controller
         }
     }
 
-    public function show($id){
-        $category = Category::with('children')->where('id', $id)->first();
+    public function show($slug){
+        $category = Category::with('children')->where('slug', $slug)->first();
 
         if(is_null($category)){
             return response()->json([
