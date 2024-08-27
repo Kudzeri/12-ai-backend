@@ -45,6 +45,14 @@ class AdvertisementController extends Controller
 
     public function store(Request $request)
     {
+        $token = $request->bearerToken();
+        if (!$token){
+            return response()->json([
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Token not provided, please login again',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         Log::info('Request data:', $request->all());
 
         $validator = Validator::make($request->all(), [
@@ -158,6 +166,13 @@ class AdvertisementController extends Controller
     }
 
     public function update(Request $request, $id){
+        $token = $request->bearerToken();
+        if (!$token){
+            return response()->json([
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Token not provided, please login again',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
         Log::info('Request data:', $request->all());
         $advertisement = Advertisement::with(['post', 'contactInfo'])->find($id);
 
@@ -253,6 +268,14 @@ class AdvertisementController extends Controller
     }
 
     public function destroy($id){
+        $token = $request->bearerToken();
+        if (!$token){
+            return response()->json([
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Token not provided, please login again',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+
         $advertisement = Advertisement::find($id);
 
         if(is_null($advertisement)){
