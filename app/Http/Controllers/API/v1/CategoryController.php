@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\Controller;
 use App\Http\Resources\CategoryCollection;
 use App\Models\Category;

@@ -2,12 +2,14 @@
 
 namespace App\Http\Controllers\API\v1;
 
+use App\Http\Controllers\API\Auth\AuthController;
 use App\Http\Controllers\Controller;
 use App\Models\Advertisement;
 use App\Models\ContactInfo;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
@@ -45,18 +47,9 @@ class AdvertisementController extends Controller
 
     public function store(Request $request)
     {
-        $token = $request->bearerToken();
-        if (!$token){
-            return response()->json([
-                'status' => Response::HTTP_UNAUTHORIZED,
-                'message' => 'Token not provided, please login again',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
         Log::info('Request data:', $request->all());
 
         $validator = Validator::make($request->all(), [
-            'user_id' => 'required|integer|exists:users,id',
             'name' => 'required|string|max:255',
             'category_id' => 'required|integer|exists:categories,id',
             'subcategory_id' => 'required|integer|exists:categories,id',
@@ -93,7 +86,7 @@ class AdvertisementController extends Controller
             Log::info('Creating advertisement.');
 
             $advertisement = Advertisement::create([
-                'user_id' => $request->user_id,  // Используем user_id из запроса
+                'user_id' => auth()->id(),
                 'name' => $request->name,
                 'category_id' => $request->category_id,
                 'subcategory_id' => $request->subcategory_id,
@@ -166,13 +159,9 @@ class AdvertisementController extends Controller
     }
 
     public function update(Request $request, $id){
-        $token = $request->bearerToken();
-        if (!$token){
-            return response()->json([
-                'status' => Response::HTTP_UNAUTHORIZED,
-                'message' => 'Token not provided, please login again',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
+        $AuthController = new AuthController();
+        $AuthController->unauthenticated($request);
+
         Log::info('Request data:', $request->all());
         $advertisement = Advertisement::with(['post', 'contactInfo'])->find($id);
 
@@ -268,14 +257,6 @@ class AdvertisementController extends Controller
     }
 
     public function destroy($id){
-        $token = $request->bearerToken();
-        if (!$token){
-            return response()->json([
-                'status' => Response::HTTP_UNAUTHORIZED,
-                'message' => 'Token not provided, please login again',
-            ], Response::HTTP_UNAUTHORIZED);
-        }
-
         $advertisement = Advertisement::find($id);
 
         if(is_null($advertisement)){

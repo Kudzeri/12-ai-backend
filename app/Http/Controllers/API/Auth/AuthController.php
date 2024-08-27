@@ -92,4 +92,14 @@ class AuthController extends Controller
             'message' => 'Logged out'
         ], Response::HTTP_OK);
     }
+
+    public function unauthenticated(Request $request){
+        $token = $request->bearerToken();
+        if (!$token){
+            return response()->json([
+                'status' => Response::HTTP_UNAUTHORIZED,
+                'message' => 'Please sign in again',
+            ], Response::HTTP_UNAUTHORIZED);
+        }
+    }
 }

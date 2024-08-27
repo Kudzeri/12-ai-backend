@@ -12,7 +12,7 @@ return Application::configure(basePath: dirname(__DIR__))
         api: __DIR__.'/../routes/api.php',
     )
     ->withMiddleware(function (Middleware $middleware) {
-        //
+        $middleware->redirectGuestsTo(fn () => route('guest'));
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

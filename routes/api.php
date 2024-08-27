@@ -14,19 +14,26 @@ Route::middleware('auth:sanctum')->group(function () {
 
 Route::post('register', [AuthController::class, 'register']);
 Route::post('login', [AuthController::class, 'login']);
+Route::get('unauthenticated', [AuthController::class, 'unauthenticated'])->name('guest');
 
 
 Route::prefix('v1')->group(function () {
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/categories', [CategoryController::class, 'store']);
+        Route::put('/categories/{id}', [CategoryController::class, 'update']);
+        Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+    });
     Route::get('/categories', [CategoryController::class, 'index']);
-    Route::post('/categories', [CategoryController::class, 'store']);
     Route::get('/categories/{id}', [CategoryController::class, 'show']);
-    Route::put('/categories/{id}', [CategoryController::class, 'update']);
-    Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
 
+
+    Route::middleware('auth:sanctum')->group(function () {
+        Route::post('/advertisements', [AdvertisementController::class, 'store']);
+        Route::put('/advertisements/{id}', [AdvertisementController::class, 'update']);
+        Route::delete('/advertisements/{id}', [AdvertisementController::class, 'destroy']);
+    });
     Route::get('/advertisements', [AdvertisementController::class, 'index']);
-    Route::post('/advertisements', [AdvertisementController::class, 'store']);
     Route::get('/advertisements/search', [AdvertisementController::class, 'index']);
     Route::get('/advertisements/{id}', [AdvertisementController::class, 'show']);
-    Route::put('/advertisements/{id}', [AdvertisementController::class, 'update']);
-    Route::delete('/advertisements/{id}', [AdvertisementController::class, 'destroy']);
+
 });
