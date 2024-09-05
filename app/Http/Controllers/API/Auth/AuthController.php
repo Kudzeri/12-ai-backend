@@ -4,6 +4,7 @@ namespace App\Http\Controllers\API\Auth;
 
 use App\Http\Controllers\Controller;
 use App\Models\User;
+use App\Services\SmsService;
 use Exception;
 use Illuminate\Auth\Events\Verified;
 use Illuminate\Http\Request;
@@ -12,6 +13,7 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\URL;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Str;
 
 class AuthController extends Controller
 {
@@ -153,5 +155,51 @@ class AuthController extends Controller
             'status' => Response::HTTP_OK,
             'message' => 'Verification link sent to your email'
         ], Response::HTTP_OK);
+    }
+
+    public function sendPhoneVerificationCode(Request $request, SmsService $service)
+    {
+        $request->validate([
+            'phone' => 'required|string|regex:/^\+?[1-9]\d{1,14}$/'
+        ]);
+
+        $user = auth()->user();
+        $code = Str::random(6);
+        $user->phone_verification_code = $code;
+        $user->save();
+
+        $service->sendVerificationCode($request->phone, $code);
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'message' => 'Verification code sent to your phone.'
+        ], Response::HTTP_OK);
+    }
+
+    public function verifyPhoneVerificationCode(Request $request)
+    {
+        $request->validate([
+            'phone' => 'required|string|regex:/^\+?[1-9]\d{1,14}$/',
+            'code' => 'required|string'
+        ]);
+
+        $user = auth()->user();
+
+
+        if ($user->phone_verification_code === $request->code) {
+            $user->phone_verified_at = now();
+            $user->phone_verification_code = null;
+            $user->save();
+
+            return response()->json([
+                'status' => Response::HTTP_OK,
+                'message' => 'Phone number verified successfully.'
+            ], Response::HTTP_OK);
+        }
+
+        return response()->json([
+            'status' => Response::HTTP_UNAUTHORIZED,
+            'message' => 'Invalid verification code.'
+        ], Response::HTTP_UNAUTHORIZED);
     }
 }

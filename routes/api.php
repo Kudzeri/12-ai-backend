@@ -18,6 +18,10 @@ Route::middleware('auth:sanctum')->group(function () {
         ->name('verification.verify');
 
     Route::get('/email/resend', [AuthController::class, 'resendVerificationEmail']);
+
+    Route::post('phone/verification-code', [AuthController::class, 'sendPhoneVerificationCode'])
+        ->name('phone_verification.send');
+    Route::post('phone/verify', [AuthController::class, 'verifyPhoneVerificationCode']);
 });
 
 Route::post('register', [AuthController::class, 'register']);
