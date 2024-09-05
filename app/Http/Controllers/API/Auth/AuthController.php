@@ -145,4 +145,13 @@ class AuthController extends Controller
             'message' => 'Your email address is verified.'
         ], Response::HTTP_OK);
     }
+
+    public function resendVerificationEmail(Request $request){
+        $request->user()->sendEmailVerificationNotification();
+
+        return response()->json([
+            'status' => Response::HTTP_OK,
+            'message' => 'Verification link sent to your email'
+        ], Response::HTTP_OK);
+    }
 }
